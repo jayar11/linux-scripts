@@ -1,0 +1,70 @@
+--------------------------------------------------------------------------------------LVM------------------------------------------------------------------------------------
+sudo vgs or sudo vgdisplay <to get volume group name>
+sudo fdisk -l or sudo fdisk -l | grep '^Disk /dev/'
+lsblk
+sudo pvcreate /dev/<new physicaldisk>
+sudo lvmdiskscan -l
+sudo vgextend <vg name> /dev/<new physicaldisk>
+sudo lvextend --extents +100%FREE /dev/mapper/<volumegroup--name-logicalvolume--name>
+sudo resize2fs /dev/mapper/<volumegroup--name-logicalvolume--name>
+sudo df -h or sudo df -h /
+
+!note: /dev/mapper/<vg name -lvname> can be obtained by df -h
+!note: use sudo vgs or sudo vgdisplay for VolumeGroup info & sudo lvs 0r sudo lvdisplay for LogicalVolume name
+!note: use blkid to list UUID of attached storage disks
+!note: use step 5 to 10 for adding extending volume & step 8 to 10 for adding remaing free disk space 
+-------------------------------------------------------------------------------Network Manager-------------------------------------------------------------------------------
+nmcli con show
+nmcli con show --active
+nmcli con show "<name of conn>"
+sudo nmcli con add con-name "static" ifname enX \
+type ethernet ipv4.method manual \
+ipv4.address <ip addr> ipv4.gateway <gateway addr>
+nmcli con show
+sudo nmcli con up "<name of conn>"
+sudo systemctl reboot or ip route
+
+use >sudo nmcli con mod to make any changes
+
+!note: use nmcli c add ifname (eg:enp1s0) to ad a new device name
+----------------------------------------------------------------------------docker ce with gpg key --------------------------------------------------------------------------
+sudo apt-get update
+sudo apt-get install \ ca-certificates \ curl \ gnupg \ lsb-release
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+apt-cache policy docker-ce
+--------------------------------------------------------------------------------docker commands--------------------------------------------------------------------------
+sudo apt install docker.io (or follow from ce install lines)
+docker info
+sudo docker images (to list local copy of downloaded images)
+sudo docker ps(list running docker images)
+sudo docker pull <imagename>
+docker run -d -t --name <nametobeused> <repositoryname>
+docker exec -it <nametobeused> sh
+docker stop <container_id> 
+docker stats (like top cmd)
+sudo docker login (login to hub.docker)
+sudo docker push <repository_name>
+-------------------------------------------------------------------------remove docker image/container------------------------------------------------------------------
+sudo docker rmi <repository_name>
+sudo docker rm <container_id>
+-----------------------------------------------------------------------------find size of container----------------------------------------------------------------------
+sudo du -sh /var/lib/docker
+sudo docker system df -v
+sudo docker image ls
+------------------------------------------------------------------------------------swapdisk-----------------------------------------------------------------------------
+swapoff -a
+fdisk /dev/<disk>(eg:sdb or sda2)
+use n for new disk and choose defaults
+use t for partion type and enter 82
+use w to write
+mkswap /dev/<disk> (processed fdisk volume)
+swapon -a
+vi /etc/fstab
+/dev/<volume> 	swap swap default 0 0
+systemctl daemon-reload
