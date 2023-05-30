@@ -1,0 +1,4 @@
+#!/bin/bash
+ssh -i "<pemfile_name>.pem" <username>@$@
+
+!note: need to pass public IP as arguements and pem file should be in /home/<userprofile> directory
