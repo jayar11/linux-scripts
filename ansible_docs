@@ -1,0 +1,42 @@
+======================ansible adhoc commands========================
+ansible-inventory -i inventory --list (for custom inventory use -i in precedence)
+default inventory should be in /etc/ansible/hosts (where hosts is filename)
+-------------------------------------------------------------
+Pattern				Result Target
+all					All Hosts from your inventory file
+host1				A single host (host1)
+host1:host2			Both host1 and host2
+group1				A single group (group1)
+group1:group2		All servers in group1 and group2
+group1:\&group2		Only servers that are both in group1 and group2
+group1:\!group2		Servers in group1 except those also in group2
+--------------------------[name:vars]--------------------------
+ansible_user=<username>
+ansible_ssh_private_key_file=/home/sammy/.ssh/<private_key_name>
+----------------------------[modules]--------------------------
+syntax is ansible <inventory header> -i inventory -m module -a "module options"
+
+!note: here name of directory is inventory
+
+1)ansible server -i inventory -m apt -a "name=tree"(to install tree)
+2)ansible server -i inventory -a "df -h" (to list disk space) [or]
+  ansible server -i inventory -m command -a 'df -h'
+3)ansible server -i inventory -m ping
+4)ansible server -i inventory -m module -a 'free -m' 
+(where server is header name in inventory file of ~/ansible for local machine)
+
+use -m for module and -a for bash commands
+use --become to evelave privileges and -K to prompt for password
+--------------------------------[running playbook]---------------------------------
+to run playbook ansible-playbook <playbook_name.yml>
+to run playbook with custom inventory path is ansible-playbook -i /path_to_inventory <playbook_name.yml>
+use -K at end of executing playbook whenever become:ture is used in playbook code
+--------------------------------[troubleshoot]-------------------------------------
+1)use ansible-playbook --syntax-check <playbook_name.yml>
+2)use ansible-playbook -vvvv <playbook_name.yml> for more info about playbook executed
+3)use ansible-playbook --check <playbook_name.yml> to run smoke test and requires check_mode: yes under tasks
+ eg:tasks:
+    - name: task always in check mode
+      shell: uname -a
+      check_mode: yes
+4)use ansible-playbook --check --diff <playbook_name.yml> to report changes made to template files on magaed hosts
