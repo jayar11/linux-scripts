@@ -1,6 +1,6 @@
 ---
 #### Playbook to perform Kernel Patching for Ubuntu/Debian Servers ####
-- hosts: servers
+- hosts: #<name of servers in inventory list>
   become: yes
   serial: 2
   tasks:
