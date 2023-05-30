@@ -9,10 +9,10 @@ sudo lvextend --extents +100%FREE /dev/mapper/<volumegroup--name-logicalvolume--
 sudo resize2fs /dev/mapper/<volumegroup--name-logicalvolume--name>
 sudo df -h or sudo df -h /
 
-!note: /dev/mapper/<vg name -lvname> can be obtained by df -h
-!note: use sudo vgs or sudo vgdisplay for VolumeGroup info & sudo lvs 0r sudo lvdisplay for LogicalVolume name
-!note: use blkid to list UUID of attached storage disks
-!note: use step 5 to 10 for adding extending volume & step 8 to 10 for adding remaing free disk space 
+#note: /dev/mapper/<vg name -lvname> can be obtained by df -h
+#note: use sudo vgs or sudo vgdisplay for VolumeGroup info & sudo lvs 0r sudo lvdisplay for LogicalVolume name
+#note: use blkid to list UUID of attached storage disks
+#note: use step 5 to 10 for adding extending volume & step 8 to 10 for adding remaing free disk space 
 -------------------------------------------------------------------------------Network Manager-------------------------------------------------------------------------------
 nmcli con show
 nmcli con show --active
@@ -26,7 +26,7 @@ sudo systemctl reboot or ip route
 
 use >sudo nmcli con mod to make any changes
 
-!note: use nmcli c add ifname (eg:enp1s0) to ad a new device name
+#note: use nmcli c add ifname (eg:enp1s0) to ad a new device name
 ----------------------------------------------------------------------------docker ce with gpg key --------------------------------------------------------------------------
 sudo apt-get update
 sudo apt-get install \ ca-certificates \ curl \ gnupg \ lsb-release
